@@ -1,4 +1,4 @@
-use axum::routing::{get, Router};
+use axum::routing::{get, post, Router};
 mod recipe_handler;
 use mongodb::{
     options::{ClientOptions, ResolverConfig},
@@ -33,6 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .route("/", get(recipe_handler::health_check))
         .route("/:id", get(recipe_handler::get_categories))
+        .route("/", post(recipe_handler::create_category))
         .with_state(db);
     axum::Server::bind(&addr.parse().unwrap())
         .serve(app.into_make_service())
